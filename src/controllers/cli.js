@@ -61,7 +61,7 @@ export default {
 
       if (position === -1) {
         data.push(part.toLowerCase());
-        stats.push(0);
+        stats.push(1);
       } else stats[position]++;
     });
 
@@ -76,7 +76,8 @@ export default {
     ));
 
     const sortedResult = orderBy(result, ['count'], ['desc']);
-    await outputResult(sortedResult, opts);
+    const finalResult = sortedResult.filter((item) => item.count > 1);
+    await outputResult(finalResult, opts);
     process.exit();
   },
 };
