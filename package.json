@@ -1,7 +1,7 @@
 {
-  "name": "compound-stats",
+  "name": "token-stats",
   "version": "0.0.1",
-  "description": "",
+  "description": "Generate statistics for tokens or compounds in text.",
   "main": "./dist/bin/cli.js",
   "scripts": {
     "build": "babel src --presets @babel/preset-env --plugins @babel/plugin-transform-runtime --out-dir dist --copy-files",
