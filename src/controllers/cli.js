@@ -56,7 +56,7 @@ export default {
     const stats = [];
 
     const queue = inputData.map((item, index) => async () => {
-      const part = await split(inputData[index]);
+      const part = await split(inputData[index], opts);
       const position = data.indexOf(part.toLowerCase());
 
       if (position === -1) {

@@ -3,11 +3,17 @@ const opts = (argv) => {
   const input = argv._[0];
   const output = argv._[1];
   const model = argv.model || argv.m;
+  const sentence = argv.sentence || argv.s;
+  const token = argv.token || argv.t;
+  const constituent = argv.constituent || argv.c;
 
   return {
     input,
     output,
     model,
+    sentence,
+    token,
+    constituent,
   };
 };
 
