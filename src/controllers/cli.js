@@ -1,7 +1,7 @@
 import nnsplit from 'nnsplit';
 import orderBy from 'lodash.orderby';
 
-import { loadData, outputResult } from '../utils/csv/csv';
+import { loadInput, formatOutput } from '../utils/csv/csv';
 import asyncQueue from '../utils/helper/asyncQueue';
 
 let splitter;
@@ -22,19 +22,19 @@ const split = async (input = '', options = {}) => {
 
   const splits = await splitter.split([input]);
 
-  // Extracting the sentence
+  // Extracting the desired sentence
   const sentencePosition = opts.sentence === -1
     ? splits[0].parts.length - 1 // last
     : Number(opts.sentence);
   const sentence = splits[0].parts[sentencePosition];
 
-  // Extracting the token
+  // Extracting the desired token
   const tokenPosition = opts.token === -1
     ? sentence.parts.length - 1 // last
     : Number(opts.token);
   const token = sentence.parts[tokenPosition].parts[0];
 
-  // Extracting the constituent
+  // Extracting the desired constituent
   const constituentPosition = opts.constituent === -1
     ? token.parts.length - 1 // last
     : Number(opts.constituent);
@@ -50,11 +50,16 @@ export default {
    * @returns
    */
   async run(opts = {}) {
-    await init(opts);
-    const inputData = await loadData(opts);
     const data = [];
     const stats = [];
 
+    // Initializing dependencies
+    await init(opts);
+
+    // Loading input file
+    const inputData = await loadInput(opts);
+
+    // Processing the data
     const queue = inputData.map((item, index) => async () => {
       const part = await split(inputData[index], opts);
       const position = data.indexOf(part.toLowerCase());
@@ -64,10 +69,9 @@ export default {
         stats.push(1);
       } else stats[position]++;
     });
-
-    // Processing the data
     await asyncQueue(queue);
 
+    // Merging the data
     const result = data.map((item, i) => (
       {
         name: item,
@@ -75,9 +79,12 @@ export default {
       }
     ));
 
-    const sortedResult = orderBy(result, ['count'], ['desc']);
-    const finalResult = sortedResult.filter((item) => item.count > 1);
-    await outputResult(finalResult, opts);
+    // Sorting and filtering the result
+    const sortedResult = orderBy(result, ['count'], ['desc']); // ordering by count
+    const finalResult = sortedResult.filter((item) => item.count > 1); // removing single values
+
+    // Formatting the output
+    await formatOutput(finalResult, opts);
     process.exit();
   },
 };
