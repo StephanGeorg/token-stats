@@ -24,7 +24,7 @@ Parameter    | Default      | Description
 Input        | Required     | Path to input file
 Output       | Required     | Path to output file
 -m           | Required     | Path to the model file (onnx) 
--s           | 0 (last)     | Index of desired sentence in text
+-s           | 0            | Index of desired sentence in text
 -t           |              | Index of desired token in sentence, -1 for last or empty 
 -c           |              | Index of desired constituent in token, -1 for last or empty
 
